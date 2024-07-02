@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: db-obs-app-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3307:3306"
+    networks:
+      - obs-app
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db-obs-app-mysql
+    ports:
+      - "8080:80"
+    networks:
+      - obs-app
+
+networks:
+  obs-app:
+    driver: bridge
