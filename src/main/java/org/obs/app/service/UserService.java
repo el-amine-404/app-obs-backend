@@ -15,4 +15,14 @@ public class UserService {
     UserRepository userRepository;
 
 
+    public User getUser(Integer userId){
+        Optional<User> user = userRepository.getUser(userId);
+
+        if(user.isPresent()){
+            return user.get();
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
 }
