@@ -15,7 +15,7 @@ public class UserService {
     UserRepository userRepository;
 
 
-    public User getUser(Integer userId){
+    public User getUser(Long userId){
         Optional<User> user = userRepository.getUser(userId);
 
         if(user.isPresent()){

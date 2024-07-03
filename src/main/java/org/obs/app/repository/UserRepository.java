@@ -14,7 +14,7 @@ public class UserRepository {
     @Inject
     JPAStreamer jpaStreamer;
 
-    public Optional<User> getUser(Integer userId){
+    public Optional<User> getUser(Long userId){
         return jpaStreamer.stream(User.class)
                 .filter(User$.id.equal(userId))
                 .findFirst();
