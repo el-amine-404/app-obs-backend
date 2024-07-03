@@ -9,7 +9,7 @@ import org.obs.app.model.User$;
 import java.util.Optional;
 
 @ApplicationScoped
-public class userRepository {
+public class UserRepository {
 
     @Inject
     JPAStreamer jpaStreamer;

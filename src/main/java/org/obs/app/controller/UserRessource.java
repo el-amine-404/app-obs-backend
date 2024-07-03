@@ -6,7 +6,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/")
-public class userRessource {
+public class UserRessource {
 
     @GET
     @Path("user")
