@@ -15,7 +15,7 @@ import org.obs.app.service.UserService;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @AllArgsConstructor
-public class UserRessource {
+public class UserController {
     
     private final UserService userService;
     
