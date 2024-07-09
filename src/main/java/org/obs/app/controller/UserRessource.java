@@ -5,6 +5,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -38,8 +39,10 @@ public class UserRessource {
     @GET
     @Path("/user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("userId") @Parameter(name="id", description="user id", example="1") Long userId) {
-        return userService.getUser(userId);
+    public Response getUser(@PathParam("userId") @Parameter(name="id", description="user id", example="1") Long userId) {
+        return Response
+                .ok(userService.getUser(userId))
+                .build();
     }
 
     @Operation(summary = "Get all users", description = "Returns all users")
@@ -49,8 +52,10 @@ public class UserRessource {
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public Response getUsers() {
+        return Response
+                .ok(userService.getUsers())
+                .build();
     }
 
 }
