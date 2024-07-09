@@ -1,6 +1,5 @@
 package org.obs.app.controller;
 
-import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -13,11 +12,17 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.obs.app.model.User;
 import org.obs.app.service.UserService;
 
+import java.util.List;
+
 @Path("/api/v1")
 public class UserRessource {
 
-    @Inject
-    UserService userService;
+
+    private final UserService userService;
+
+    public UserRessource(UserService userService){
+        this.userService = userService;
+    }
 
     @GET
     @Path("/hello")
@@ -35,6 +40,17 @@ public class UserRessource {
     @Produces(MediaType.APPLICATION_JSON)
     public User getUser(@PathParam("userId") @Parameter(name="id", description="user id", example="1") Long userId) {
         return userService.getUser(userId);
+    }
+
+    @Operation(summary = "Get all users", description = "Returns all users")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Successfully retrieved")
+    })
+    @GET
+    @Path("/users")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> getUsers() {
+        return userService.getUsers();
     }
 
 }

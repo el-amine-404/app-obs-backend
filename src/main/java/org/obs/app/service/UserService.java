@@ -1,19 +1,20 @@
 package org.obs.app.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.obs.app.model.User;
 import org.obs.app.repository.UserRepository;
 
-import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
 public class UserService {
+    
+    private final UserRepository userRepository;
 
-    @Inject
-    UserRepository userRepository;
-
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User getUser(Long userId){
         Optional<User> user = userRepository.getUser(userId);
@@ -23,6 +24,10 @@ public class UserService {
         } else {
             throw new RuntimeException("User not found");
         }
+    }
+
+    public List<User> getUsers(){
+        return userRepository.getUsers();
     }
 
 }
