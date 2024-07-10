@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.Validate;
+import org.obs.app.exception.UserNotFoundException;
 import org.obs.app.model.User;
 import org.obs.app.repository.UserRepository;
 
@@ -44,6 +45,9 @@ public class UserService {
 
     @Transactional
     public boolean delete(long userId) {
+        if ( userRepository.findByIdOptional(userId).isEmpty() ){
+            throw new UserNotFoundException("User with id " + userId + " does not exist" );
+        }
         return userRepository.deleteById(userId);
     }
 

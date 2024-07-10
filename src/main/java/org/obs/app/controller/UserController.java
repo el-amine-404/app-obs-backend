@@ -8,11 +8,14 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.obs.app.exception.ApiError;
+import org.obs.app.exception.UserNotFoundException;
 import org.obs.app.model.User;
 import org.obs.app.service.UserService;
 
 import javax.naming.directory.InvalidAttributesException;
 import java.security.InvalidParameterException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Path("/api/v1/user")
@@ -88,11 +91,30 @@ public class UserController {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") long userId) {
-        var isDeleted = userService.delete(userId);
-        if (!isDeleted) {
-            return Response.notModified().build();
+//        var isDeleted = userService.delete(userId);
+//        if (!isDeleted) {
+//            return Response.notModified().build();
+//        }
+//        return Response.noContent().build();
+
+        try {
+            userService.delete(userId);
+            return Response
+                    .noContent()
+                    .build();
+        } catch (UserNotFoundException unfe){
+                ApiError apiError = new ApiError( LocalDateTime.now(), Response.Status.NOT_FOUND.getStatusCode(), Response.Status.NOT_FOUND, unfe.getMessage(), unfe.getMessage());
+                return Response
+                        .status(Response.Status.NOT_FOUND)
+                        .entity(apiError)
+                        .build();
+            } catch (Exception e){
+                return Response
+                        .serverError()
+                        .entity(e.getMessage())
+                        .build();
+            }
         }
-        return Response.noContent().build();
-    }
+                             
 
 }
