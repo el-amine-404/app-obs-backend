@@ -67,7 +67,10 @@ public class UserController {
             return Response.noContent().build();
         } catch (Exception e) {
             if (e instanceof InvalidAttributesException) {
-                return Response.status(Response.Status.CONFLICT).entity(Map.of("message", e.getMessage())).build();
+                return Response
+                        .status(Response.Status.CONFLICT)
+                        .entity(Map.of("message", e.getMessage(), "timestamp", LocalDateTime.now(), "error", e))
+                        .build();
             }
 
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -115,6 +118,5 @@ public class UserController {
                         .build();
             }
         }
-                             
 
 }
