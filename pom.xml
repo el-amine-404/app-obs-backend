@@ -98,6 +98,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Hibernate validator -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
