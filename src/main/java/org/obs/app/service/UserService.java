@@ -4,7 +4,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.Validate;
+import org.obs.app.dto.UserDto;
 import org.obs.app.exception.UserNotFoundException;
+import org.obs.app.mapper.UserMapper;
 import org.obs.app.model.User;
 import org.obs.app.repository.UserRepository;
 
@@ -19,12 +21,14 @@ public class UserService {
     
     private final UserRepository userRepository;
 
-    public Optional<User> findUserById(long id) {
-        return userRepository.findByIdOptional(id);
+    private final UserMapper userMapper;
+
+    public Optional<UserDto> findUserById(long id) {
+        return Optional.of(userMapper.toDto(userRepository.findByIdOptional(id).get()));
     }
 
-    public List<User> getUsers(){
-        return userRepository.listAll();
+    public List<UserDto> getUsers(){
+        return userMapper.toDtoList(userRepository.listAll());
     }
 
     @Transactional

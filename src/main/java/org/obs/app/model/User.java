@@ -16,8 +16,11 @@ public class User {
     @Column(name = "user_id", nullable = false)
     private Long id;
 
-    @Column(name = "login", nullable = false, length = 50)
-    private String login;
+    @Column(name = "email", nullable = false, length = 50)
+    private String email;
+
+    @Column(name = "username", nullable = false, length = 50)
+    private String username;
 
     @Column(name = "password", nullable = false, length = 50)
     private String password;
@@ -27,4 +30,11 @@ public class User {
 
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
+
+    @Column(name = "age", nullable = false, length = 50)
+    private int age;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender", nullable = false, length = 50)
+    private Gender gender;
 }

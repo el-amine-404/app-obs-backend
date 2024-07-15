@@ -21,12 +21,13 @@ public class UserRepository implements PanacheRepository<User> {
         var saved = savedOpt.get();
         saved.setFirstName(user.getFirstName());
         saved.setLastName(user.getLastName());
-        saved.setLogin(user.getLogin());
+        saved.setUsername(user.getUsername());
         saved.setPassword(user.getPassword());
-        
+        saved.setAge(user.getAge());
+        saved.setEmail(user.getEmail());
+        saved.setGender(user.getGender());
+
         return Optional.of(saved);
     }
-
     
-
 }
