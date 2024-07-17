@@ -1,5 +1,9 @@
 package org.obs.app.model;
 
+import io.quarkus.security.jpa.Password;
+import io.quarkus.security.jpa.Roles;
+import io.quarkus.security.jpa.UserDefinition;
+import io.quarkus.security.jpa.Username;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +14,7 @@ import lombok.Setter;
 @Table(name = "user", schema = "obs_app")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
+@UserDefinition
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +24,16 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
+    @Username
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Password
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Roles
+    public String role;
 
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;

@@ -23,8 +23,11 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public Optional<UserDto> findUserById(long id) {
-        return Optional.of(userMapper.toDto(userRepository.findByIdOptional(id).get()));
+    public UserDto getUser(long userId) {
+//        return Optional.of(userMapper.toDto(userRepository.findByIdOptional(id).get()));
+        return userMapper.toDto(userRepository
+                                    .findByIdOptional(userId)
+                                    .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist")));
     }
 
     public List<UserDto> getUsers(){
@@ -48,11 +51,12 @@ public class UserService {
     }
 
     @Transactional
-    public boolean delete(long userId) {
-        if ( userRepository.findByIdOptional(userId).isEmpty() ){
-            throw new UserNotFoundException("User with id " + userId + " does not exist" );
-        }
-        return userRepository.deleteById(userId);
+    public void delete(long userId) {
+        userRepository
+                .findByIdOptional(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist"));
+
+        userRepository.deleteById(userId);
     }
 
 }

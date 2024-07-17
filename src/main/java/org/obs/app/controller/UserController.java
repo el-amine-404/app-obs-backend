@@ -1,15 +1,17 @@
 package org.obs.app.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import lombok.AllArgsConstructor;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
-import org.obs.app.exception.ApiError;
-import org.obs.app.exception.UserNotFoundException;
+import org.obs.app.dto.UserDto;
 import org.obs.app.model.User;
 import org.obs.app.service.UserService;
 
@@ -43,21 +45,23 @@ public class UserController {
 
     @Operation(summary = "Get a user by id", description = "Returns a user as per the id")
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Successfully retrieved")
+            @APIResponse(responseCode = "200", description = "Successfully retrieved"),
+            @APIResponse(responseCode = "404", description = "User not found")
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") @Parameter(name="id", description="user id", example="1") Long id) {
-        try {
-            final var userByIdOpt = userService.findUserById(id);
-            if (userByIdOpt.isEmpty()) {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
-
-            return Response.ok(userByIdOpt.get()).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+    public UserDto getById(@PathParam("id") @Parameter(name="id", description="user id", example="1") Long userId) {
+//        try {
+//            final var userByIdOpt = userService.findUserById(userId);
+//            if (userByIdOpt.isEmpty()) {
+//                return Response.status(Response.Status.NOT_FOUND).build();
+//            }
+//
+//            return Response.ok(userByIdOpt.get()).build();
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.BAD_REQUEST).build();
+//        }
+        return userService.getUser(userId);
     }
 
     @POST
@@ -93,30 +97,15 @@ public class UserController {
 
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") long userId) {
-//        var isDeleted = userService.delete(userId);
-//        if (!isDeleted) {
-//            return Response.notModified().build();
-//        }
-//        return Response.noContent().build();
+    public void delete(@PathParam("id") long userId) {
+        userService.delete(userId);
+    }
 
-        try {
-            userService.delete(userId);
-            return Response
-                    .noContent()
-                    .build();
-        } catch (UserNotFoundException unfe){
-                ApiError apiError = new ApiError( LocalDateTime.now(), Response.Status.NOT_FOUND.getStatusCode(), Response.Status.NOT_FOUND, unfe.getMessage(), unfe.getMessage());
-                return Response
-                        .status(Response.Status.NOT_FOUND)
-                        .entity(apiError)
-                        .build();
-            } catch (Exception e){
-                return Response
-                        .serverError()
-                        .entity(e.getMessage())
-                        .build();
-            }
-        }
+    @GET
+    @RolesAllowed("user")
+    @Path("/me")
+    public String me(@Context SecurityContext securityContext) {
+        return securityContext.getUserPrincipal().getName();
+    }
 
 }

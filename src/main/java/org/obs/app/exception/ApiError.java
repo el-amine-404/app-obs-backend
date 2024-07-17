@@ -20,6 +20,5 @@ public class ApiError {
     private int statusCode;
     private Response.Status status;
     private String message;
-    private String debugMessage;
     
 }
