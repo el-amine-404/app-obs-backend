@@ -31,7 +31,6 @@ public class UserMapper {
         return user;
     }
 
-
     public UserDto toDto(User user) {
         if (user == null) {
             return null;

@@ -83,6 +83,14 @@
             <version>1.10.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
+
         <!-- MapStruct -->
         <!-- In case you use for example Lombok pay attention that you must define the Lombok dependency before the one for the MapStruct processor. -->
 
@@ -109,6 +117,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-security-jpa</artifactId>
         </dependency>
+
+        <!-- Liquibase -->
+<!--        <dependency>-->
+<!--            <groupId>io.quarkus</groupId>-->
+<!--            <artifactId>quarkus-liquibase</artifactId>-->
+<!--        </dependency>-->
 
     </dependencies>
 

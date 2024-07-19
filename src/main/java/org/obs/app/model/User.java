@@ -5,6 +5,7 @@ import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,11 +31,12 @@ public class User {
 
     @Password
     @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password must not be blank")
     private String password;
 
     @Roles
     public String role;
-
+    
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
 

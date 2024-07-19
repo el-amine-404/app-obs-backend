@@ -3,17 +3,16 @@ package org.obs.app.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.Validate;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.obs.app.dto.UserDto;
+import org.obs.app.dto.UserUpdateCreateDto;
 import org.obs.app.exception.UserNotFoundException;
 import org.obs.app.mapper.UserMapper;
 import org.obs.app.model.User;
 import org.obs.app.repository.UserRepository;
 
-import javax.naming.directory.InvalidAttributesException;
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 @AllArgsConstructor
@@ -23,11 +22,18 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private String userNotFoundMessage(long userId) {
+        return String.format("User with id %d not found", userId);
+    }
+
+    private String userEmailNotValidMessage(String email) {
+        return String.format("Invalid email address: %s (please provide something like: username@domain", email);
+    }
+
     public UserDto getUser(long userId) {
-//        return Optional.of(userMapper.toDto(userRepository.findByIdOptional(id).get()));
         return userMapper.toDto(userRepository
                                     .findByIdOptional(userId)
-                                    .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist")));
+                                    .orElseThrow(() -> new UserNotFoundException(userNotFoundMessage(userId))));
     }
 
     public List<UserDto> getUsers(){
@@ -35,28 +41,51 @@ public class UserService {
     }
 
     @Transactional
-    public void create(User user) throws InvalidAttributesException {
-        if (user.getId() != null) {
-            throw new InvalidAttributesException("Id must not be filled");
+    public UserDto create(UserUpdateCreateDto userDetails){
+
+        if (!EmailValidator.getInstance().isValid(userDetails.getEmail())) {
+            throw new InvalidParameterException(userEmailNotValidMessage(userDetails.getEmail()));
         }
-        Validate.notNull(user, "User can not be null");
+
+        User user = new User();
+        user.setFirstName(userDetails.getFirstName());
+        user.setLastName(userDetails.getLastName());
+        user.setUsername(userDetails.getUsername());
+        user.setPassword(userDetails.getPassword());
+        user.setAge(userDetails.getAge());
+        user.setEmail(userDetails.getEmail());
+        user.setGender(userDetails.getGender());
+        user.setRole(userDetails.getRole());
 
         userRepository.persist(user);
+        return userMapper.toDto(user);
     }
 
     @Transactional
-    public User update(long userId, User user) {
-        user.setId(userId);
-        return userRepository.update(user).orElseThrow(() -> new InvalidParameterException("User not found"));
+    public UserDto update(long userId, UserUpdateCreateDto userDetails) {
+        User user = userRepository
+                .findByIdOptional(userId)
+                .orElseThrow(() -> new UserNotFoundException(userNotFoundMessage(userId)));
+
+        user.setFirstName(userDetails.getFirstName());
+        user.setLastName(userDetails.getLastName());
+        user.setUsername(userDetails.getUsername());
+        user.setPassword(userDetails.getPassword());
+        user.setAge(userDetails.getAge());
+        user.setEmail(userDetails.getEmail());
+        user.setGender(userDetails.getGender());
+        user.setRole(userDetails.getRole());
+
+        return userMapper.toDto(user);
     }
 
     @Transactional
     public void delete(long userId) {
-        userRepository
+        User user = userRepository
                 .findByIdOptional(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist"));
+                .orElseThrow(() -> new UserNotFoundException(userNotFoundMessage(userId)));
 
-        userRepository.deleteById(userId);
+        userRepository.deleteById(user.getId());
     }
 
 }

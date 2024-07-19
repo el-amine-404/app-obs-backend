@@ -13,11 +13,8 @@ import org.obs.app.model.Gender;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class UserUpdateCreateDto {
     
-    @NotNull(message = "Id must not be blank")
-    private Long id;
-
     @Email(message = "Please provide a valid email address")
     private String email;
 
@@ -33,8 +30,9 @@ public class UserDto {
     @Size(min = 1, max = 50, message = "LastName must be between 1 and 50 characters long")
     private String lastName;
 
+    @NotBlank
+    private String password;
 
-    @NotNull
     @Digits(integer = 3, fraction = 0, message = "Invalid age. Maximum valid number for age is 3 digits.")
     @Min(value = 0, message = "Age must not be less than 0")
     @Max(value = 999, message = "Age must not be more than 999")
@@ -45,4 +43,5 @@ public class UserDto {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
 }
