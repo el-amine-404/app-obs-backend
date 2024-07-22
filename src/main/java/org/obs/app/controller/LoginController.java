@@ -25,10 +25,7 @@ import org.obs.app.service.UserService;
 public class LoginController {
     
     private final UserService userService;
-
-    @ConfigProperty(name = "jwt.expiration.time")
-    long jwtExpirationTime;
-
+    
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -40,7 +37,7 @@ public class LoginController {
             String token = userService.generateJwtToken(user);
             return Response
                     .ok()
-                    .entity(new TokenResponse("Bearer " + token, jwtExpirationTime))
+                    .entity(new TokenResponse("Bearer " + token, userService.getJwtExpirationTime()))
                     .build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity(new Message("Invalid credentials")).build();
