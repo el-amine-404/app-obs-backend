@@ -1,8 +1,6 @@
 package org.obs.app.controller;
 
 import jakarta.annotation.security.PermitAll;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -11,7 +9,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.obs.app.dto.LoginDto;
 import org.obs.app.dto.Message;
 import org.obs.app.dto.TokenResponse;

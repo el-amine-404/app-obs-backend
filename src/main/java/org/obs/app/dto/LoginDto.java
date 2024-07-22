@@ -1,6 +1,5 @@
 package org.obs.app.dto;
 
-import io.quarkus.arc.All;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

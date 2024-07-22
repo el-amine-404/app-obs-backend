@@ -4,7 +4,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.jboss.logging.Logger;
-import org.jboss.logmanager.Level;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;

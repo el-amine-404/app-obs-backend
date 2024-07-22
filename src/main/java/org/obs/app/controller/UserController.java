@@ -1,7 +1,6 @@
 package org.obs.app.controller;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -59,7 +58,7 @@ public class UserController {
             @APIResponse(responseCode = "400", description = "Invalid input")
     })
     @POST
-    @RolesAllowed({"ADMIN"})
+//    @RolesAllowed({"ADMIN"})
     public Response create(@Valid @RequestBody UserUpdateCreateDto userDetails) {
         
             UserDto createdUser =  userService.create(userDetails);
