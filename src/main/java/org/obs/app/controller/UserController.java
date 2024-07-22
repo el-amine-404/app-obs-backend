@@ -1,9 +1,12 @@
 package org.obs.app.controller;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 import lombok.AllArgsConstructor;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
@@ -21,7 +24,7 @@ import java.net.URI;
 @Consumes(MediaType.APPLICATION_JSON)
 @AllArgsConstructor
 public class UserController {
-    
+
     private final UserService userService;
     
     @Operation(summary = "Get all users", description = "Returns all users")
@@ -29,6 +32,7 @@ public class UserController {
             @APIResponse(responseCode = "200", description = "Successfully retrieved")
     })
     @GET
+    @RolesAllowed({"ADMIN"})
     public Response getUsers() {
             return Response
                     .ok(userService.getUsers())
@@ -55,6 +59,7 @@ public class UserController {
             @APIResponse(responseCode = "400", description = "Invalid input")
     })
     @POST
+    @RolesAllowed({"ADMIN"})
     public Response create(@Valid @RequestBody UserUpdateCreateDto userDetails) {
         
             UserDto createdUser =  userService.create(userDetails);
@@ -77,8 +82,10 @@ public class UserController {
             @APIResponse(responseCode = "400", description = "Invalid input"),
             @APIResponse(responseCode = "404", description = "User not found"),
     })
+
     @PUT
     @Path("/{id}")
+    @RolesAllowed({"ADMIN"})
     public Response update(@PathParam("id") long userId, @Valid @RequestBody UserUpdateCreateDto userDetails) {
             return Response
                     .ok(userService.update(userId, userDetails))
@@ -92,6 +99,7 @@ public class UserController {
     })
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"ADMIN"})
     public Response delete(@PathParam("id") long userId) {
         userService.delete(userId);
         return Response
@@ -99,11 +107,5 @@ public class UserController {
                 .build();
     }
 
-    @GET
-    @RolesAllowed("user")
-    @Path("/me")
-    public String me(@Context SecurityContext securityContext) {
-        return securityContext.getUserPrincipal().getName();
-    }
     
 }

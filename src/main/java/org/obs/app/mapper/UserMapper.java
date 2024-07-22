@@ -27,6 +27,7 @@ public class UserMapper {
         user.setEmail(userDto.getEmail());
         user.setAge(userDto.getAge());
         user.setGender(userDto.getGender());
+        user.setRole(userDto.getRole());
 
         return user;
     }
@@ -44,6 +45,7 @@ public class UserMapper {
         userDto.setEmail(user.getEmail());
         userDto.setAge(user.getAge());
         userDto.setGender(user.getGender());
+        userDto.setRole(user.getRole());
 
         return userDto;
     }

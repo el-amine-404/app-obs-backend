@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.obs.app.model.Gender;
+import org.obs.app.model.Role;
 
 @Getter
 @Setter
@@ -38,10 +39,9 @@ public class UserUpdateCreateDto {
     @Max(value = 999, message = "Age must not be more than 999")
     private int age;
 
-    @NotBlank
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
 }

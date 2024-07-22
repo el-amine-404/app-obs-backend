@@ -1,7 +1,6 @@
 package org.obs.app.model;
 
 import io.quarkus.security.jpa.Password;
-import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 import jakarta.persistence.*;
@@ -15,7 +14,6 @@ import lombok.Setter;
 @Table(name = "user", schema = "obs_app")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@UserDefinition
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +23,16 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @Username
     @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Password
     @Column(name = "password", nullable = false)
     @NotBlank(message = "Password must not be blank")
     private String password;
 
-    @Roles
-    public String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, length = 50)
+    public Role role;
     
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;

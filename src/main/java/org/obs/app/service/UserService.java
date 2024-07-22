@@ -1,9 +1,13 @@
 package org.obs.app.service;
 
+import io.quarkus.elytron.security.common.BcryptUtil;
+import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.Claims;
 import org.obs.app.dto.UserDto;
 import org.obs.app.dto.UserUpdateCreateDto;
 import org.obs.app.exception.UserNotFoundException;
@@ -15,12 +19,25 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 @ApplicationScoped
-@AllArgsConstructor
 public class UserService {
-    
+
     private final UserRepository userRepository;
 
+    @ConfigProperty(name = "mp.jwt.verify.issuer")
+    String issuer;
+
+    @ConfigProperty(name = "jwt.expiration.time")
+    long jwtExpirationTime;
+
     private final UserMapper userMapper;
+
+
+    public UserService(final UserRepository userRepository,
+                       final UserMapper userMapper)  {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
+
 
     private String userNotFoundMessage(long userId) {
         return String.format("User with id %d not found", userId);
@@ -86,6 +103,26 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(userNotFoundMessage(userId)));
 
         userRepository.deleteById(user.getId());
+    }
+
+    public String generateJwtToken(final User user) {
+
+        return Jwt.issuer(issuer)
+                .upn(user.getUsername())
+                .groups(user.getRole().toString())
+                .expiresIn(jwtExpirationTime)
+                .claim(Claims.email_verified.name(), user.getEmail())
+                .sign();
+    }
+
+    public boolean checkUserCredentials(String username, String password) {
+        final User user = findByUsername(username);
+        return BcryptUtil.matches(password, user.getPassword());
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
     }
 
 }
