@@ -5,6 +5,7 @@ import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.Getter;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claims;
@@ -18,6 +19,7 @@ import org.obs.app.repository.UserRepository;
 import java.security.InvalidParameterException;
 import java.util.List;
 
+@Getter
 @ApplicationScoped
 public class UserService {
 
@@ -112,6 +114,7 @@ public class UserService {
                 .groups(user.getRole().toString())
                 .expiresIn(jwtExpirationTime)
                 .claim(Claims.email_verified.name(), user.getEmail())
+                .claim(Claims.family_name, user.getLastName())
                 .sign();
     }
 
@@ -122,7 +125,7 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s not found", username)));
+                .orElseThrow(() -> new UserNotFoundException(String.format("User '%s' not found", username)));
     }
 
 }
